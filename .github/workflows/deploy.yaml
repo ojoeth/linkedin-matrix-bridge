@@ -103,38 +103,7 @@ jobs:
           registry: ${{ env.GHCR_REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
-      - uses: beeper/docker-retag-push-latest@main
-        with:
-          image: ${{ env.CI_REGISTRY_IMAGE }}
-
-      - uses: beeper/docker-retag-push-latest@main
-        with:
-          image: ${{ env.GHCR_REGISTRY_IMAGE }}
-
-      - name: Run bridge CD tool
-        uses: beeper/bridge-cd-tool@main
-        env:
-          CI_REGISTRY: "${{ secrets.CI_REGISTRY }}"
-          BEEPER_DEV_ADMIN_API_URL: "${{ secrets.BEEPER_DEV_ADMIN_API_URL }}"
-          BEEPER_STAGING_ADMIN_API_URL: "${{ secrets.BEEPER_STAGING_ADMIN_API_URL }}"
-          BEEPER_PROD_ADMIN_API_URL: "${{ secrets.BEEPER_PROD_ADMIN_API_URL }}"
-          BEEPER_DEV_ADMIN_NIGHTLY_PASS: "${{ secrets.BEEPER_DEV_ADMIN_NIGHTLY_PASS }}"
-          BEEPER_STAGING_ADMIN_NIGHTLY_PASS: "${{ secrets.BEEPER_STAGING_ADMIN_NIGHTLY_PASS }}"
-          BEEPER_PROD_ADMIN_NIGHTLY_PASS: "${{ secrets.BEEPER_PROD_ADMIN_NIGHTLY_PASS }}"
-
-  publish-pypi:
-    runs-on: ubuntu-latest
-    needs:
-      - lint
-    if: ${{ github.event_name == 'release' && github.event.action == 'created' }}
-    steps:
-      - uses: actions/checkout@v4
-      - name: Publish to pypi
-        uses: pypa/gh-action-pypi-publish@v1.8.12
-        with:
-          password: ${{ secrets.PYPI_TOKEN }}
-
+          
   tag-docker-release:
     runs-on: ubuntu-latest
     needs:
